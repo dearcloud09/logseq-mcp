@@ -4,26 +4,28 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-purple.svg)](https://modelcontextprotocol.io/)
 
-> **AI가 당신의 Logseq 그래프를 직접 읽고 쓸 수 있게 해주는 MCP 서버**
+> **Let AI read and write your Logseq graph directly via MCP**
 
-Claude와 대화하면서 "오늘 저널에 이거 추가해줘", "지난주에 뭐했는지 찾아봐", "이 페이지랑 연결된 거 다 보여줘"가 가능해집니다.
+[한국어 README](README.ko.md)
+
+Talk to Claude and say "add this to today's journal", "find what I did last week", "show me all pages linked to this one" - and it just works.
 
 ---
 
 ## Why This?
 
-**문제**: Logseq는 훌륭한 PKM 도구지만, AI 어시스턴트와 연동하려면 매번 복사-붙여넣기가 필요합니다.
+**Problem**: Logseq is a great PKM tool, but integrating with AI assistants requires constant copy-pasting.
 
-**해결**: 이 MCP 서버를 사용하면:
-- Claude가 **직접** 저널에 기록 (복사-붙여넣기 불필요)
-- 과거 기록을 **검색하고 요약** (맥락 유지)
-- 페이지 간 **연결 관계 탐색** (백링크, 그래프)
-- 템플릿 기반 **저널 자동 생성**
+**Solution**: With this MCP server:
+- Claude **directly** writes to your journal (no copy-paste)
+- **Search and summarize** past entries (maintain context)
+- **Navigate connections** between pages (backlinks, graph)
+- **Auto-generate** daily journals with templates
 
 ```
-You: "오늘 회의 내용 저널에 정리해줘"
-Claude: [logseq-mcp로 직접 저널에 기록]
-        "저널에 추가했습니다. 다른 정리할 내용 있으세요?"
+You: "Summarize today's meeting notes and add them to my journal"
+Claude: [writes directly to Logseq via logseq-mcp]
+        "Done! Added to today's journal. Anything else?"
 ```
 
 ---
@@ -32,53 +34,36 @@ Claude: [logseq-mcp로 직접 저널에 기록]
 
 ### Good fit if you...
 
-- Logseq를 **주력 PKM**으로 사용 중
-- Claude Code나 Claude Desktop을 **일상적으로 사용**
-- AI에게 노트 관리를 **위임**하고 싶음
-- **로컬 파일 기반** Logseq 사용 (Logseq Sync 아님)
+- Use Logseq as your **primary PKM**
+- Use **Claude Code or Claude Desktop** regularly
+- Want to **delegate** note management to AI
+- Use **local file-based** Logseq (not Logseq Sync)
 
 ### Not for you if...
 
-- **Logseq Sync** 사용 중 (로컬 파일 접근 필요)
-- **Obsidian** 사용자 (다른 MCP 서버 필요)
-- 노트에 민감 정보가 많고 **AI 접근이 불편**함
-- 마크다운 외 **org-mode** 사용 (현재 미지원)
-
----
-
-## Demo
-
-<!-- TODO: 실제 사용 GIF 추가 -->
-```
-You: "지난주 저널에서 TODO 항목 다 찾아줘"
-Claude: [search_pages 실행]
-
-You: "이 중에서 완료 안 된 거 오늘 저널로 옮겨줘"
-Claude: [read_page → append_to_page 실행]
-
-You: "Goals 페이지 연결된 페이지들 보여줘"
-Claude: [get_backlinks 실행]
-```
+- Using **Logseq Sync** (requires local file access)
+- **Obsidian** user (different MCP server needed)
+- Have sensitive info in notes and **uncomfortable with AI access**
+- Use **org-mode** instead of Markdown (not yet supported)
 
 ---
 
 ## Features
 
-| 기능 | 설명 |
-|------|------|
-| **Page CRUD** | 페이지 생성, 읽기, 수정, 삭제 + 프로퍼티 지원 |
-| **Search** | 전체 검색 + 태그/폴더 필터링 |
-| **Graph Navigation** | 링크, 백링크, 페이지 관계 탐색 |
-| **Journal** | 오늘/특정 날짜 저널 접근 + 템플릿 지원 |
-| **Article** | 대화 정리, 웹 아티클, 읽은 글을 저널에 기록 |
-| **Daily Automation** | 날씨 정보 + 일기 템플릿 자동 생성 (launchd) |
-| **Resources** | 그래프 페이지를 MCP 리소스로 노출 |
+| Feature | Description |
+|---------|-------------|
+| **Page CRUD** | Create, read, update, delete pages + property support |
+| **Search** | Full-text search + tag/folder filtering |
+| **Graph Navigation** | Links, backlinks, page relationship traversal |
+| **Journal** | Access today's/specific date journals + templates |
+| **Content Logging** | Log articles, books, movies, exhibitions to journal |
+| **Resources** | Expose graph pages as MCP resources |
 
 ---
 
 ## Quick Start
 
-### 1. 설치
+### 1. Install
 
 ```bash
 git clone https://github.com/dearcloud09/logseq-mcp.git
@@ -87,7 +72,7 @@ npm install
 npm run build
 ```
 
-### 2. 설정
+### 2. Configure
 
 **Claude Code** (`~/.claude/settings.json`):
 
@@ -98,15 +83,12 @@ npm run build
       "command": "node",
       "args": ["/path/to/logseq-mcp/dist/index.js"],
       "env": {
-        "LOGSEQ_GRAPH_PATH": "/path/to/your/logseq/graph",
-        "WEATHER_LOCATION": "서울"
+        "LOGSEQ_GRAPH_PATH": "/path/to/your/logseq/graph"
       }
     }
   }
 }
 ```
-
-> `WEATHER_LOCATION`: 날씨 정보를 가져올 지역 (기본값: 서울)
 
 **Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
@@ -117,17 +99,16 @@ npm run build
       "command": "node",
       "args": ["/path/to/logseq-mcp/dist/index.js"],
       "env": {
-        "LOGSEQ_GRAPH_PATH": "/path/to/your/logseq/graph",
-        "WEATHER_LOCATION": "서울"
+        "LOGSEQ_GRAPH_PATH": "/path/to/your/logseq/graph"
       }
     }
   }
 }
 ```
 
-### 3. 확인
+### 3. Verify
 
-Claude에게 물어보세요: "내 Logseq 페이지 목록 보여줘"
+Ask Claude: "Show me my Logseq page list"
 
 ---
 
@@ -135,34 +116,34 @@ Claude에게 물어보세요: "내 Logseq 페이지 목록 보여줘"
 
 | Tool | Description |
 |------|-------------|
-| `list_pages` | 전체 페이지 목록 + 메타데이터 (태그, 링크, 백링크) |
-| `read_page` | 페이지 내용 및 메타데이터 조회 |
-| `create_page` | 새 페이지 생성 (프로퍼티 지원) |
-| `update_page` | 페이지 내용 수정 |
-| `delete_page` | 페이지 삭제 |
-| `append_to_page` | 기존 페이지에 내용 추가 |
-| `search_pages` | 내용/제목 검색 + 태그/폴더 필터 |
-| `get_backlinks` | 특정 페이지를 참조하는 페이지들 |
-| `get_graph` | 페이지 연결 그래프 데이터 |
-| `get_journal` | 오늘/특정 날짜 저널 조회 |
-| `create_journal` | 저널 생성 (템플릿 지원) |
-| `add_article` | 아티클을 저널에 추가 (제목, 요약, 태그, URL, 하이라이트) |
-| `add_book` | 책을 저널에 추가 → `[[문화]]` 하위에 기록 (제목, 창작자, 태그, 메모) |
-| `add_movie` | 영화를 저널에 추가 → `[[문화]]` 하위에 기록 (제목, 창작자, 메모) |
-| `add_exhibition` | 전시회를 저널에 추가 → `[[문화]]` 하위에 기록 (제목, 장소, 창작자, 메모) |
+| `list_pages` | List all pages with metadata (tags, links, backlinks) |
+| `read_page` | Read page content and metadata |
+| `create_page` | Create new page (with property support) |
+| `update_page` | Update page content |
+| `delete_page` | Delete a page |
+| `append_to_page` | Append content to existing page |
+| `search_pages` | Search by content/title + tag/folder filters |
+| `get_backlinks` | Get pages that reference a specific page |
+| `get_graph` | Get page connection graph data |
+| `get_journal` | Get today's or specific date's journal |
+| `create_journal` | Create journal with optional template |
+| `add_article` | Add article to journal (title, summary, tags, URL, highlights) |
+| `add_book` | Add book to journal (title, author, tags, memo) |
+| `add_movie` | Add movie to journal (title, director, memo) |
+| `add_exhibition` | Add exhibition to journal (title, venue, artist, memo) |
 
 ---
 
 ## Usage Examples
 
 ```
-"오늘 저널 보여줘"
-"'프로젝트 A' 페이지에 이 내용 추가해줘: ..."
-"#meeting 태그 달린 페이지 다 찾아줘"
-"Goals 페이지랑 연결된 페이지들 뭐가 있어?"
-"지난주 저널에서 TODO 검색해줘"
-"새 페이지 만들어줘: 제목은 'Reading List'"
-"우리 대화 내용 아티클로 정리해서 저널에 저장해줘"
+"Show me today's journal"
+"Add this content to 'Project A' page: ..."
+"Find all pages with #meeting tag"
+"What pages are connected to my Goals page?"
+"Search for TODO items in last week's journals"
+"Create a new page called 'Reading List'"
+"Summarize our conversation and save it as an article in my journal"
 ```
 
 ---
@@ -171,17 +152,21 @@ Claude에게 물어보세요: "내 Logseq 페이지 목록 보여줘"
 
 ```
 your-graph/
-  journals/     # 저널 (2024_01_15.md 형식)
-  pages/        # 일반 페이지
-  logseq/       # Logseq 설정
-  whiteboards/  # 화이트보드
+  journals/     # Daily journals (2024_01_15.md format)
+  pages/        # Regular pages
+  logseq/       # Logseq settings
+  whiteboards/  # Whiteboards
 ```
 
 ---
 
 ## Security
 
-Graph 외부 파일 접근 차단, 입력 검증, DoS 방지 등 보안 강화 적용됨.
+- Path traversal protection (graph-only access)
+- Symlink/hardlink attack prevention
+- Input validation and sanitization
+- DoS protection (content size limits)
+- Error message sanitization
 
 ---
 
@@ -189,103 +174,55 @@ Graph 외부 파일 접근 차단, 입력 검증, DoS 방지 등 보안 강화 �
 
 ### "LOGSEQ_GRAPH_PATH environment variable is required"
 
-`LOGSEQ_GRAPH_PATH` 환경변수가 설정되지 않았습니다. 설정 파일에서 경로를 확인하세요.
+Set `LOGSEQ_GRAPH_PATH` in your configuration file.
 
-### MCP 서버가 Claude에서 인식되지 않음
+### MCP server not recognized by Claude
 
-1. Claude Code/Desktop 재시작
-2. 경로가 절대 경로인지 확인 (`/Users/...` 형식)
-3. `npm run build` 실행 확인
+1. Restart Claude Code/Desktop
+2. Verify path is absolute (`/Users/...` format)
+3. Ensure `npm run build` was executed
 
-### 페이지가 보이지 않음
+### Pages not showing up
 
-- `journals/`, `pages/` 폴더에 `.md` 파일이 있는지 확인
-- Logseq Sync가 아닌 **로컬 그래프**인지 확인
+- Check if `.md` files exist in `journals/` or `pages/`
+- Verify you're using **local graph** (not Logseq Sync)
 
-### org-mode 파일이 안 읽힘
+### org-mode files not reading
 
-현재 **Markdown만 지원**합니다. org-mode 지원은 추후 예정.
+Currently **Markdown only**. org-mode support planned for future.
 
 ---
 
-## Daily Automation (Optional)
+## Korean-Specific Features
 
-매일 아침 자동으로 저널에 날씨 + 일기 템플릿을 추가하는 기능:
+This project includes features optimized for Korean users:
+
+### Daily Automation (Optional)
+
+Auto-generate daily journal with weather (Korea only - uses Naver Weather) and diary template:
 
 ```bash
-# 수동 실행 테스트
 LOGSEQ_GRAPH_PATH=/path/to/logseq WEATHER_LOCATION=서울 node add-today-dairy.js
-
-# macOS launchd로 자동화 (매일 6시)
-cp com.logseq.daily-automation.plist ~/Library/LaunchAgents/
-launchctl load ~/Library/LaunchAgents/com.logseq.daily-automation.plist
 ```
 
-생성되는 템플릿:
-```markdown
-- [[일기]]
-  - [[날씨]]
-    - 맑음
-    - 최저 기온 1도, 최고 기온 10도
-    - ...
-  - [[오늘의 일기]]
-    - [[행복도]]
-    - [[오늘의 행복]]
-    - [[오늘의 컨디션]]
-    - [[오늘 잘 해낸 일]]
-    - [[오늘의 생각]]
-  - [[TIL]]
-- [[Tasks]]
-  - TODO
-- [[수면]]
-  - 취침:
-  - 기상:
-  - 질: /5
-```
+See [Korean README](README.ko.md) for detailed setup with launchd automation.
 
-### 문화 콘텐츠 기록 구조
+### Cultural Content Structure
 
-`add_book`, `add_movie`, `add_exhibition` 도구는 통합된 `[[문화]]` 구조를 사용:
-
-```markdown
-- [[문화]]
-  - #책
-    - 제목 : 총균쇠
-    - 창작자 : 재레드 다이아몬드
-    - 메모 : ...
-
-- [[문화]]
-  - #영화
-    - 제목 : 인셉션
-    - 창작자 : 크리스토퍼 놀란
-    - 메모 : ...
-
-- [[문화]]
-  - #전시회
-    - 제목 : 이건희 컬렉션
-    - 장소 : 국립중앙박물관
-    - 창작자 : 다수
-    - 메모 : ...
-```
-
-Logseq 쿼리 예시:
-```clojure
-{{query [[문화]]}}           ;; 모든 문화 콘텐츠
-{{query (and [[문화]] #책)}} ;; 책만
-```
+`add_book`, `add_movie`, `add_exhibition` tools use Korean wikilink structure (`[[문화]]`). Customize the templates in `src/index.ts` for your language.
 
 ---
 
 ## Development
 
 ```bash
-# 개발 모드 (hot reload)
+# Development mode (watch)
 npm run dev
 
-# TypeScript 빌드
+# TypeScript build
 npm run build
 
-# 프로덕션 실행
+# Production run
 npm start
 ```
 
@@ -293,16 +230,16 @@ npm start
 
 ```
 src/
-  index.ts    # MCP 서버 엔트리포인트, 도구 핸들러
-  types.ts    # TypeScript 타입 정의
-  graph.ts    # 그래프 파일시스템 작업
+  index.ts    # MCP server entry point, tool handlers
+  types.ts    # TypeScript type definitions
+  graph.ts    # Graph filesystem operations
 ```
 
 ---
 
 ## Contributing
 
-이슈와 PR 환영합니다!
+Issues and PRs welcome!
 
 1. Fork this repo
 2. Create feature branch (`git checkout -b feature/amazing`)
@@ -312,10 +249,11 @@ src/
 
 ### Ideas for contribution
 
-- [ ] org-mode 지원
-- [ ] Logseq 프로퍼티 검색
-- [ ] 화이트보드 지원
-- [ ] 더 나은 그래프 시각화 데이터
+- [ ] org-mode support
+- [ ] Logseq property search
+- [ ] Whiteboard support
+- [ ] Better graph visualization data
+- [ ] i18n for templates
 
 ---
 
@@ -329,4 +267,4 @@ src/
 
 - [Model Context Protocol](https://modelcontextprotocol.io/)
 - [Logseq](https://logseq.com/)
-- [Claude Code](https://claude.com/claude-code)
+- [Claude Code](https://claude.ai/code)
