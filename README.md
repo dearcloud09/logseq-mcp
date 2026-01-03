@@ -1,6 +1,6 @@
 # Logseq MCP Server
 
-[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+[![License: Polyform Noncommercial](https://img.shields.io/badge/License-Polyform%20NC-red.svg)](https://polyformproject.org/licenses/noncommercial/1.0.0)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-purple.svg)](https://modelcontextprotocol.io/)
 
@@ -259,7 +259,7 @@ Issues and PRs welcome!
 
 ## License
 
-[ISC](LICENSE)
+[Polyform Noncommercial 1.0.0](LICENSE) - Free for personal and noncommercial use.
 
 ---
 
