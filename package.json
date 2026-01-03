@@ -1,0 +1,29 @@
+{
+  "name": "logseq-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for Logseq graph integration",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "mcp",
+    "logseq",
+    "ai"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "axios": "^1.13.2",
+    "cheerio": "^1.1.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.35",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
+  }
+}

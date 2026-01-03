@@ -1,0 +1,27 @@
+#!/bin/bash
+# 이 파일을 run-daily-automation.sh로 복사하고 경로를 수정하세요
+
+cd "/path/to/logseq-mcp"
+
+# 환경 설정
+source ~/.zshrc 2>/dev/null || source ~/.bashrc 2>/dev/null
+export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:$PATH
+export LOGSEQ_GRAPH_PATH=/path/to/your/logseq/graph
+export WEATHER_LOCATION=서울
+
+# 로그 파일
+LOG_FILE="/path/to/logseq-mcp/automation.log"
+
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Daily automation 시작" >> "$LOG_FILE"
+
+# 5분 타임아웃으로 실행
+timeout 300 /opt/homebrew/bin/node add-today-dairy.js >> "$LOG_FILE" 2>&1
+
+EXIT_CODE=$?
+if [ $EXIT_CODE -eq 124 ]; then
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] 타임아웃: 5분 초과로 강제 종료" >> "$LOG_FILE"
+elif [ $EXIT_CODE -eq 0 ]; then
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Daily automation 정상 완료" >> "$LOG_FILE"
+else
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Daily automation 실패 (exit code: $EXIT_CODE)" >> "$LOG_FILE"
+fi
