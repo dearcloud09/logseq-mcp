@@ -3,5 +3,3 @@ dist/
 .DS_Store
 *.log
 .env
-run-daily-automation.sh
-automation.log

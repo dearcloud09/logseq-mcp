@@ -199,13 +199,25 @@ This project includes features optimized for Korean users:
 
 ### Daily Automation (Optional)
 
-Auto-generate daily journal with weather (Korea only - uses Naver Weather) and diary template:
+Auto-generate daily journal with weather (Korea only - uses Naver Weather) and diary template.
 
+1. Copy and edit plist file:
 ```bash
-LOGSEQ_GRAPH_PATH=/path/to/logseq WEATHER_LOCATION=서울 node add-today-dairy.js
+cp com.logseq.daily-automation.plist.example ~/Library/LaunchAgents/com.logseq.daily-automation.plist
+# Edit the file to replace /path/to/ with your actual paths
 ```
 
-See [Korean README](README.ko.md) for detailed setup with launchd automation.
+2. Load launchd agent:
+```bash
+launchctl load ~/Library/LaunchAgents/com.logseq.daily-automation.plist
+```
+
+3. Test manually:
+```bash
+./run-daily-automation.sh
+```
+
+See [Korean README](README.ko.md) for detailed template structure.
 
 ### Cultural Content Structure
 

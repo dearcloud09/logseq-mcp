@@ -214,13 +214,24 @@ Graph 외부 파일 접근 차단, 입력 검증, DoS 방지 등 보안 강화 �
 
 매일 아침 자동으로 저널에 날씨 + 일기 템플릿을 추가하는 기능:
 
-```bash
-# 수동 실행 테스트
-LOGSEQ_GRAPH_PATH=/path/to/logseq WEATHER_LOCATION=서울 node add-today-dairy.js
+### 설정 방법
 
-# macOS launchd로 자동화 (매일 6시)
-cp com.logseq.daily-automation.plist ~/Library/LaunchAgents/
+1. plist 파일 복사 및 경로 수정:
+```bash
+cp com.logseq.daily-automation.plist.example ~/Library/LaunchAgents/com.logseq.daily-automation.plist
+```
+
+2. 복사한 파일에서 `/path/to/` 부분을 실제 경로로 수정
+
+3. launchd 등록:
+```bash
 launchctl load ~/Library/LaunchAgents/com.logseq.daily-automation.plist
+```
+
+### 수동 실행 테스트
+
+```bash
+./run-daily-automation.sh
 ```
 
 생성되는 템플릿:
