@@ -217,7 +217,27 @@ launchctl load ~/Library/LaunchAgents/com.logseq.daily-automation.plist
 ./run-daily-automation.sh
 ```
 
-See [Korean README](README.ko.md) for detailed template structure.
+Generated template structure:
+```markdown
+- [[일기]]
+  - [[날씨]]
+    - {weather info}
+  - [[오늘의 일기]]
+    - [[행복도]]
+      - [[오늘의 행복]]
+    - [[오늘의 컨디션]]
+      - [[수면]]
+        - 취침:
+        - 기상:
+        - 질: /5
+    - [[오늘의 생각]]
+  - [[Tasks]]
+    - TODO
+    - [[오늘 잘 해낸 일]]
+  - [[TIL]]
+```
+
+See [Korean README](README.ko.md) for more details.
 
 ### Cultural Content Structure
 

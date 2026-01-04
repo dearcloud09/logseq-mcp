@@ -55,23 +55,21 @@ async function generateTemplate(weatherLines) {
   // 오늘의 일기 섹션
   lines.push('\t- [[오늘의 일기]]');
   lines.push('\t\t- [[행복도]]');
-  lines.push('\t\t- [[오늘의 행복]]');
+  lines.push('\t\t\t- [[오늘의 행복]]');
   lines.push('\t\t- [[오늘의 컨디션]]');
-  lines.push('\t\t- [[오늘 잘 해낸 일]]');
+  lines.push('\t\t\t- [[수면]]');
+  lines.push('\t\t\t\t- 취침:');
+  lines.push('\t\t\t\t- 기상:');
+  lines.push('\t\t\t\t- 질: /5');
   lines.push('\t\t- [[오늘의 생각]]');
+
+  // Tasks 섹션
+  lines.push('\t- [[Tasks]]');
+  lines.push('\t\t- TODO ');
+  lines.push('\t\t- [[오늘 잘 해낸 일]]');
 
   // TIL 섹션
   lines.push('\t- [[TIL]]');
-
-  // Tasks 섹션
-  lines.push('- [[Tasks]]');
-  lines.push('\t- TODO ');
-
-  // 수면 섹션
-  lines.push('- [[수면]]');
-  lines.push('\t- 취침:');
-  lines.push('\t- 기상:');
-  lines.push('\t- 질: /5');
 
   return lines.join('\n');
 }
