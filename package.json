@@ -14,7 +14,7 @@
     "logseq",
     "ai"
   ],
-  "license": "ISC",
+  "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "axios": "^1.13.2",
