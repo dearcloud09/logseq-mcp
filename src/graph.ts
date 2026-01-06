@@ -4,7 +4,7 @@
  */
 
 import { readdir, readFile, writeFile, unlink, mkdir, stat, lstat } from 'node:fs/promises';
-import { join, basename, extname, resolve } from 'node:path';
+import { join, basename, extname, resolve, sep } from 'node:path';
 import type { Page, PageMetadata, SearchResult, SearchMatch, Graph, GraphNode, GraphEdge } from './types.js';
 
 // 보안 상수
@@ -569,7 +569,8 @@ export class GraphService {
     const normalizedPath = resolve(filePath);
     const normalizedGraphPath = resolve(this.graphPath);
 
-    if (!normalizedPath.startsWith(normalizedGraphPath + '/') && normalizedPath !== normalizedGraphPath) {
+    // Windows/Unix 호환: path.sep 사용 ('/' 또는 '\')
+    if (!normalizedPath.startsWith(normalizedGraphPath + sep) && normalizedPath !== normalizedGraphPath) {
       throw new Error(`Access denied: path outside graph directory`);
     }
 
