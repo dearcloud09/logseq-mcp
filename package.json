@@ -33,7 +33,7 @@
     "pkm",
     "knowledge-graph"
   ],
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dearcloud09/logseq-mcp.git"

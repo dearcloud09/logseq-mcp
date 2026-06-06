@@ -1,6 +1,6 @@
 # Logseq MCP Server
 
-[![License: Polyform Noncommercial](https://img.shields.io/badge/License-Polyform%20NC-red.svg)](https://polyformproject.org/licenses/noncommercial/1.0.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-20%2B-green.svg)](https://nodejs.org/)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-purple.svg)](https://modelcontextprotocol.io/)
 
@@ -373,7 +373,7 @@ src/
 
 ## License
 
-[Polyform Noncommercial 1.0.0](LICENSE) - 개인 및 비상업적 사용 무료.
+[MIT](LICENSE)
 
 ---
 
