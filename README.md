@@ -1,14 +1,14 @@
 # Logseq MCP Server
 
-[![License: Polyform Noncommercial](https://img.shields.io/badge/License-Polyform%20NC-red.svg)](https://polyformproject.org/licenses/noncommercial/1.0.0)
-[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/Node.js-20%2B-green.svg)](https://nodejs.org/)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-purple.svg)](https://modelcontextprotocol.io/)
 
 > **Let AI read and write your Logseq graph directly via MCP**
 
 [한국어 README](README.ko.md)
 
-Talk to Claude and say "add this to today's journal", "find what I did last week", "show me all pages linked to this one" - and it just works.
+Ask Codex, Claude Code, or Claude Desktop to "add this to today's journal", "find what I did last week", or "show me all pages linked to this one" - and it just works.
 
 ---
 
@@ -35,7 +35,7 @@ Claude: [writes directly to Logseq via logseq-mcp]
 ### Good fit if you...
 
 - Use Logseq as your **primary PKM**
-- Use **Claude Code or Claude Desktop** regularly
+- Use **Codex, Claude Code, or Claude Desktop** regularly
 - Want to **delegate** note management to AI
 - Use **local file-based** Logseq (not Logseq Sync)
 
@@ -65,14 +65,37 @@ Claude: [writes directly to Logseq via logseq-mcp]
 
 ### 1. Install
 
+Use the published package:
+
+```bash
+npx -y logseq-mcp
+```
+
+Or install from a local checkout for development:
+
 ```bash
 git clone https://github.com/dearcloud09/logseq-mcp.git
 cd logseq-mcp
-npm install
+npm ci
 npm run build
 ```
 
-### 2. Configure
+### 2. Configure Codex
+
+Add the MCP server to `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.logseq]
+command = "npx"
+args = ["-y", "logseq-mcp"]
+
+[mcp_servers.logseq.env]
+LOGSEQ_GRAPH_PATH = "/path/to/your/logseq/graph"
+```
+
+Then open Codex and run `/mcp` to confirm the `logseq` server is connected.
+
+### 3. Configure Claude
 
 **Claude Code** (`~/.claude/settings.json`):
 
@@ -80,8 +103,8 @@ npm run build
 {
   "mcpServers": {
     "logseq": {
-      "command": "node",
-      "args": ["/path/to/logseq-mcp/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "logseq-mcp"],
       "env": {
         "LOGSEQ_GRAPH_PATH": "/path/to/your/logseq/graph"
       }
@@ -96,8 +119,8 @@ npm run build
 {
   "mcpServers": {
     "logseq": {
-      "command": "node",
-      "args": ["/path/to/logseq-mcp/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "logseq-mcp"],
       "env": {
         "LOGSEQ_GRAPH_PATH": "/path/to/your/logseq/graph"
       }
@@ -106,9 +129,12 @@ npm run build
 }
 ```
 
-### 3. Verify
+For a local checkout, replace the command with `node` and the args with
+`["/absolute/path/to/logseq-mcp/dist/index.js"]`.
 
-Ask Claude: "Show me my Logseq page list"
+### 4. Verify
+
+Ask your MCP client: "Show me my Logseq page list"
 
 ---
 
@@ -168,6 +194,8 @@ your-graph/
 - DoS protection (content size limits)
 - Error message sanitization
 
+See [SECURITY.md](SECURITY.md) for the full security model.
+
 ---
 
 ## Troubleshooting
@@ -176,11 +204,12 @@ your-graph/
 
 Set `LOGSEQ_GRAPH_PATH` in your configuration file.
 
-### MCP server not recognized by Claude
+### MCP server not recognized by Codex or Claude
 
-1. Restart Claude Code/Desktop
-2. Verify path is absolute (`/Users/...` format)
-3. Ensure `npm run build` was executed
+1. Confirm Node.js 20+ is installed
+2. Confirm `LOGSEQ_GRAPH_PATH` is an absolute path (`/Users/...` format)
+3. In Codex, run `/mcp` and check whether `logseq` is listed
+4. For a local checkout, ensure `npm run build` was executed
 
 ### Pages not showing up
 
@@ -248,11 +277,20 @@ See [Korean README](README.ko.md) for more details.
 ## Development
 
 ```bash
+# Install dependencies
+npm ci
+
 # Development mode (watch)
 npm run dev
 
 # TypeScript build
 npm run build
+
+# Run regression tests
+npm test
+
+# Check npm package contents
+npm pack --dry-run
 
 # Production run
 npm start
@@ -271,13 +309,8 @@ src/
 
 ## Contributing
 
-Issues and PRs welcome!
-
-1. Fork this repo
-2. Create feature branch (`git checkout -b feature/amazing`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing`)
-5. Open a Pull Request
+Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md)
+for setup, testing, and contribution guidelines.
 
 ### Ideas for contribution
 
@@ -291,7 +324,7 @@ Issues and PRs welcome!
 
 ## License
 
-[Polyform Noncommercial 1.0.0](LICENSE) - Free for personal and noncommercial use.
+[MIT](LICENSE)
 
 ---
 
@@ -299,4 +332,5 @@ Issues and PRs welcome!
 
 - [Model Context Protocol](https://modelcontextprotocol.io/)
 - [Logseq](https://logseq.com/)
+- [Codex](https://developers.openai.com/codex/)
 - [Claude Code](https://claude.ai/code)

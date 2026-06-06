@@ -1,24 +1,58 @@
 {
   "name": "logseq-mcp",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "MCP server for Logseq graph integration",
   "type": "module",
   "main": "dist/index.js",
+  "bin": {
+    "logseq-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "README.ko.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "typecheck": "tsc --noEmit",
+    "prepack": "npm run build"
   },
   "keywords": [
     "mcp",
     "logseq",
-    "ai"
+    "ai",
+    "codex",
+    "claude",
+    "pkm",
+    "knowledge-graph"
   ],
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dearcloud09/logseq-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dearcloud09/logseq-mcp/issues"
+  },
+  "homepage": "https://github.com/dearcloud09/logseq-mcp#readme",
+  "engines": {
+    "node": ">=20"
+  },
+  "overrides": {
+    "ajv": "^8.20.0",
+    "fast-uri": "^3.1.2"
+  },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
-    "axios": "^1.13.2",
-    "cheerio": "^1.1.2",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "axios": "^1.17.0",
+    "cheerio": "^1.2.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
