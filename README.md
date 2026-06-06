@@ -68,7 +68,7 @@ Claude: [writes directly to Logseq via logseq-mcp]
 Use the published package:
 
 ```bash
-npx -y logseq-mcp
+npx -y @dearcloud09/logseq-mcp
 ```
 
 Or install from a local checkout for development:
@@ -87,7 +87,7 @@ Add the MCP server to `~/.codex/config.toml`:
 ```toml
 [mcp_servers.logseq]
 command = "npx"
-args = ["-y", "logseq-mcp"]
+args = ["-y", "@dearcloud09/logseq-mcp"]
 
 [mcp_servers.logseq.env]
 LOGSEQ_GRAPH_PATH = "/path/to/your/logseq/graph"
@@ -104,7 +104,7 @@ Then open Codex and run `/mcp` to confirm the `logseq` server is connected.
   "mcpServers": {
     "logseq": {
       "command": "npx",
-      "args": ["-y", "logseq-mcp"],
+      "args": ["-y", "@dearcloud09/logseq-mcp"],
       "env": {
         "LOGSEQ_GRAPH_PATH": "/path/to/your/logseq/graph"
       }
@@ -120,7 +120,7 @@ Then open Codex and run `/mcp` to confirm the `logseq` server is connected.
   "mcpServers": {
     "logseq": {
       "command": "npx",
-      "args": ["-y", "logseq-mcp"],
+      "args": ["-y", "@dearcloud09/logseq-mcp"],
       "env": {
         "LOGSEQ_GRAPH_PATH": "/path/to/your/logseq/graph"
       }
