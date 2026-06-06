@@ -1,14 +1,14 @@
 # Logseq MCP Server
 
 [![License: Polyform Noncommercial](https://img.shields.io/badge/License-Polyform%20NC-red.svg)](https://polyformproject.org/licenses/noncommercial/1.0.0)
-[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-20%2B-green.svg)](https://nodejs.org/)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-purple.svg)](https://modelcontextprotocol.io/)
 
 > **AI가 당신의 Logseq 그래프를 직접 읽고 쓸 수 있게 해주는 MCP 서버**
 
 [English README](README.md)
 
-Claude와 대화하면서 "오늘 저널에 이거 추가해줘", "지난주에 뭐했는지 찾아봐", "이 페이지랑 연결된 거 다 보여줘"가 가능해집니다.
+Codex, Claude Code, Claude Desktop과 대화하면서 "오늘 저널에 이거 추가해줘", "지난주에 뭐했는지 찾아봐", "이 페이지랑 연결된 거 다 보여줘"가 가능해집니다.
 
 ---
 
@@ -17,7 +17,7 @@ Claude와 대화하면서 "오늘 저널에 이거 추가해줘", "지난주에 
 **문제**: Logseq는 훌륭한 PKM 도구지만, AI 어시스턴트와 연동하려면 매번 복사-붙여넣기가 필요합니다.
 
 **해결**: 이 MCP 서버를 사용하면:
-- Claude가 **직접** 저널에 기록 (복사-붙여넣기 불필요)
+- AI 어시스턴트가 **직접** 저널에 기록 (복사-붙여넣기 불필요)
 - 과거 기록을 **검색하고 요약** (맥락 유지)
 - 페이지 간 **연결 관계 탐색** (백링크, 그래프)
 - 템플릿 기반 **저널 자동 생성**
@@ -35,7 +35,7 @@ Claude: [logseq-mcp로 직접 저널에 기록]
 ### Good fit if you...
 
 - Logseq를 **주력 PKM**으로 사용 중
-- Claude Code나 Claude Desktop을 **일상적으로 사용**
+- Codex, Claude Code, Claude Desktop을 **일상적으로 사용**
 - AI에게 노트 관리를 **위임**하고 싶음
 - **로컬 파일 기반** Logseq 사용 (Logseq Sync 아님)
 
@@ -82,14 +82,38 @@ Claude: [get_backlinks 실행]
 
 ### 1. 설치
 
+배포 패키지 사용:
+
+```bash
+npx -y logseq-mcp
+```
+
+개발용 로컬 체크아웃 사용:
+
 ```bash
 git clone https://github.com/dearcloud09/logseq-mcp.git
 cd logseq-mcp
-npm install
+npm ci
 npm run build
 ```
 
-### 2. 설정
+### 2. Codex 설정
+
+`~/.codex/config.toml`에 MCP 서버를 추가합니다:
+
+```toml
+[mcp_servers.logseq]
+command = "npx"
+args = ["-y", "logseq-mcp"]
+
+[mcp_servers.logseq.env]
+LOGSEQ_GRAPH_PATH = "/path/to/your/logseq/graph"
+WEATHER_LOCATION = "서울"
+```
+
+Codex에서 `/mcp`를 실행해 `logseq` 서버가 연결되었는지 확인합니다.
+
+### 3. Claude 설정
 
 **Claude Code** (`~/.claude/settings.json`):
 
@@ -97,8 +121,8 @@ npm run build
 {
   "mcpServers": {
     "logseq": {
-      "command": "node",
-      "args": ["/path/to/logseq-mcp/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "logseq-mcp"],
       "env": {
         "LOGSEQ_GRAPH_PATH": "/path/to/your/logseq/graph",
         "WEATHER_LOCATION": "서울"
@@ -116,8 +140,8 @@ npm run build
 {
   "mcpServers": {
     "logseq": {
-      "command": "node",
-      "args": ["/path/to/logseq-mcp/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "logseq-mcp"],
       "env": {
         "LOGSEQ_GRAPH_PATH": "/path/to/your/logseq/graph",
         "WEATHER_LOCATION": "서울"
@@ -127,9 +151,12 @@ npm run build
 }
 ```
 
-### 3. 확인
+로컬 체크아웃을 직접 실행하려면 command를 `node`, args를
+`["/absolute/path/to/logseq-mcp/dist/index.js"]`로 바꿉니다.
 
-Claude에게 물어보세요: "내 Logseq 페이지 목록 보여줘"
+### 4. 확인
+
+MCP 클라이언트에게 물어보세요: "내 Logseq 페이지 목록 보여줘"
 
 ---
 
@@ -183,7 +210,9 @@ your-graph/
 
 ## Security
 
-Graph 외부 파일 접근 차단, 입력 검증, DoS 방지 등 보안 강화 적용됨.
+Graph 외부 파일 접근 차단, 심링크/하드링크 차단, 입력 검증, DoS 방지,
+에러 메시지 정제 등 보안 강화가 적용되어 있습니다. 자세한 보안 모델은
+[SECURITY.md](SECURITY.md)를 참고하세요.
 
 ---
 
@@ -193,11 +222,12 @@ Graph 외부 파일 접근 차단, 입력 검증, DoS 방지 등 보안 강화 �
 
 `LOGSEQ_GRAPH_PATH` 환경변수가 설정되지 않았습니다. 설정 파일에서 경로를 확인하세요.
 
-### MCP 서버가 Claude에서 인식되지 않음
+### MCP 서버가 Codex 또는 Claude에서 인식되지 않음
 
-1. Claude Code/Desktop 재시작
-2. 경로가 절대 경로인지 확인 (`/Users/...` 형식)
-3. `npm run build` 실행 확인
+1. Node.js 20 이상이 설치되어 있는지 확인
+2. `LOGSEQ_GRAPH_PATH`가 절대 경로인지 확인 (`/Users/...` 형식)
+3. Codex에서는 `/mcp`를 실행해 `logseq` 서버가 보이는지 확인
+4. 로컬 체크아웃을 사용하는 경우 `npm run build` 실행 확인
 
 ### 페이지가 보이지 않음
 
@@ -292,11 +322,20 @@ Logseq 쿼리 예시:
 ## Development
 
 ```bash
+# 의존성 설치
+npm ci
+
 # 개발 모드 (hot reload)
 npm run dev
 
 # TypeScript 빌드
 npm run build
+
+# 회귀 테스트
+npm test
+
+# npm 패키지 내용 확인
+npm pack --dry-run
 
 # 프로덕션 실행
 npm start
@@ -315,7 +354,7 @@ src/
 
 ## Contributing
 
-이슈와 PR 환영합니다!
+이슈와 PR 환영합니다! 자세한 개발/테스트 가이드는 [CONTRIBUTING.md](CONTRIBUTING.md)를 참고하세요.
 
 1. Fork this repo
 2. Create feature branch (`git checkout -b feature/amazing`)
@@ -342,4 +381,5 @@ src/
 
 - [Model Context Protocol](https://modelcontextprotocol.io/)
 - [Logseq](https://logseq.com/)
+- [Codex](https://developers.openai.com/codex/)
 - [Claude Code](https://claude.com/claude-code)

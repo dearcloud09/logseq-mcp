@@ -4,7 +4,7 @@
  */
 
 import { readdir, readFile, writeFile, unlink, mkdir, stat, lstat } from 'node:fs/promises';
-import { join, basename, extname, resolve } from 'node:path';
+import { join, basename, extname, resolve, dirname } from 'node:path';
 import type { Page, PageMetadata, SearchResult, SearchMatch, Graph, GraphNode, GraphEdge } from './types.js';
 
 // 보안 상수
@@ -17,9 +17,9 @@ export class GraphService {
   private journalsPath: string;
 
   constructor(graphPath: string) {
-    this.graphPath = graphPath;
-    this.pagesPath = join(graphPath, 'pages');
-    this.journalsPath = join(graphPath, 'journals');
+    this.graphPath = resolve(graphPath);
+    this.pagesPath = join(this.graphPath, 'pages');
+    this.journalsPath = join(this.graphPath, 'journals');
   }
 
   /**
@@ -78,6 +78,11 @@ export class GraphService {
           } catch {
             continue;
           }
+          try {
+            await this.checkRegularFile(filePath);
+          } catch {
+            continue;
+          }
           const content = await readFile(filePath, 'utf-8');
           const name = basename(file, '.md');
           pages.push({
@@ -107,6 +112,11 @@ export class GraphService {
           } catch {
             continue;
           }
+          try {
+            await this.checkRegularFile(filePath);
+          } catch {
+            continue;
+          }
           const content = await readFile(filePath, 'utf-8');
           const name = basename(file, '.md');
           pages.push({
@@ -131,7 +141,7 @@ export class GraphService {
    */
   async readPage(pathOrName: string): Promise<Page> {
     const filePath = await this.resolvePath(pathOrName);
-    await this.checkSymlink(filePath); // 심링크 공격 방지
+    await this.checkRegularFile(filePath); // 심링크/하드링크 공격 방지
     const content = await readFile(filePath, 'utf-8');
     const name = basename(filePath, '.md');
     const isJournal = filePath.includes('/journals/');
@@ -231,7 +241,7 @@ export class GraphService {
     this.validateContentSize(content);
 
     const filePath = await this.resolvePath(pathOrName);
-    await this.checkSymlink(filePath); // 심링크 공격 방지
+    await this.checkRegularFile(filePath); // 심링크/하드링크 공격 방지
     const fullContent = this.buildContent(content, properties);
     await writeFile(filePath, fullContent, 'utf-8');
     return this.readPage(pathOrName);
@@ -242,7 +252,7 @@ export class GraphService {
    */
   async deletePage(pathOrName: string): Promise<void> {
     const filePath = await this.resolvePath(pathOrName);
-    await this.checkSymlink(filePath); // 보안: 심링크 공격 방지
+    await this.checkRegularFile(filePath); // 보안: 심링크/하드링크 공격 방지
     await unlink(filePath);
   }
 
@@ -254,7 +264,7 @@ export class GraphService {
     this.validateContentSize(content);
 
     const filePath = await this.resolvePath(pathOrName);
-    await this.checkSymlink(filePath); // 심링크 공격 방지
+    await this.checkRegularFile(filePath); // 심링크/하드링크 공격 방지
     const existing = await readFile(filePath, 'utf-8');
     const newContent = existing.trimEnd() + '\n' + content;
 
@@ -567,7 +577,7 @@ export class GraphService {
    */
   private validatePath(filePath: string): string {
     const normalizedPath = resolve(filePath);
-    const normalizedGraphPath = resolve(this.graphPath);
+    const normalizedGraphPath = this.graphPath;
 
     if (!normalizedPath.startsWith(normalizedGraphPath + '/') && normalizedPath !== normalizedGraphPath) {
       throw new Error(`Access denied: path outside graph directory`);
@@ -576,11 +586,29 @@ export class GraphService {
     return normalizedPath;
   }
 
+  private validateGraphPagePath(filePath: string): string {
+    const normalizedPath = this.validatePath(filePath);
+    const normalizedDir = dirname(normalizedPath);
+
+    if (normalizedDir !== this.pagesPath && normalizedDir !== this.journalsPath) {
+      throw new Error(`Access denied: only pages and journals are allowed`);
+    }
+
+    if (extname(normalizedPath) !== '.md') {
+      throw new Error(`Access denied: only markdown pages are allowed`);
+    }
+
+    return normalizedPath;
+  }
+
   private async resolvePath(pathOrName: string): Promise<string> {
     // If it's already a relative path
     if (pathOrName.includes('/')) {
-      const filePath = join(this.graphPath, pathOrName);
-      return this.validatePath(filePath);
+      const withExtension = extname(pathOrName) ? pathOrName : `${pathOrName}.md`;
+      const filePath = join(this.graphPath, withExtension);
+      const validPath = this.validateGraphPagePath(filePath);
+      await stat(validPath);
+      return validPath;
     }
 
     // Try pages first
@@ -652,6 +680,10 @@ export class GraphService {
       } else {
         break;
       }
+    }
+
+    while (bodyStart < lines.length && lines[bodyStart].trim() === '') {
+      bodyStart++;
     }
 
     return {
