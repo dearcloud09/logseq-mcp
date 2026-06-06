@@ -1,5 +1,5 @@
 {
-  "name": "logseq-mcp",
+  "name": "@dearcloud09/logseq-mcp",
   "version": "0.1.0",
   "description": "MCP server for Logseq graph integration",
   "type": "module",
@@ -42,6 +42,9 @@
     "url": "https://github.com/dearcloud09/logseq-mcp/issues"
   },
   "homepage": "https://github.com/dearcloud09/logseq-mcp#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=20"
   },

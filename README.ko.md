@@ -85,7 +85,7 @@ Claude: [get_backlinks 실행]
 배포 패키지 사용:
 
 ```bash
-npx -y logseq-mcp
+npx -y @dearcloud09/logseq-mcp
 ```
 
 개발용 로컬 체크아웃 사용:
@@ -104,7 +104,7 @@ npm run build
 ```toml
 [mcp_servers.logseq]
 command = "npx"
-args = ["-y", "logseq-mcp"]
+args = ["-y", "@dearcloud09/logseq-mcp"]
 
 [mcp_servers.logseq.env]
 LOGSEQ_GRAPH_PATH = "/path/to/your/logseq/graph"
@@ -122,7 +122,7 @@ Codex에서 `/mcp`를 실행해 `logseq` 서버가 연결되었는지 확인합�
   "mcpServers": {
     "logseq": {
       "command": "npx",
-      "args": ["-y", "logseq-mcp"],
+      "args": ["-y", "@dearcloud09/logseq-mcp"],
       "env": {
         "LOGSEQ_GRAPH_PATH": "/path/to/your/logseq/graph",
         "WEATHER_LOCATION": "서울"
@@ -141,7 +141,7 @@ Codex에서 `/mcp`를 실행해 `logseq` 서버가 연결되었는지 확인합�
   "mcpServers": {
     "logseq": {
       "command": "npx",
-      "args": ["-y", "logseq-mcp"],
+      "args": ["-y", "@dearcloud09/logseq-mcp"],
       "env": {
         "LOGSEQ_GRAPH_PATH": "/path/to/your/logseq/graph",
         "WEATHER_LOCATION": "서울"
